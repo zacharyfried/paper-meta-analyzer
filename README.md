@@ -46,8 +46,8 @@ The framework can be adapted for any systematic review requiring consistent eval
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/research-paper-meta-analysis.git
-cd research-paper-meta-analysis
+git clone https://github.com/zacharyfried/paper-meta-analyzer.git
+cd paper-meta-analyzer
 ```
 
 2. Install required packages:
@@ -208,39 +208,6 @@ All components generate detailed logs:
 - `pdf_processing.log`: PDF extraction details
 - Console output for real-time monitoring
 
-## Future Enhancements
-
-Potential improvements for this tool include:
-- Web interface for easier configuration
-- Support for additional reference management systems
-- Advanced NLP for better text understanding
-- Integration with statistical analysis packages
-- Cloud deployment capabilities
-
-## Contributing
-
-This project is open for improvements and suggestions. Feel free to:
-- Report issues
-- Suggest enhancements
-- Submit pull requests
-
-## Disclaimer
-
-This tool is designed for academic research purposes. Users are responsible for:
-- Complying with copyright laws when processing papers
-- Obtaining necessary API keys and permissions
-- Ensuring ethical use of automated analysis tools
-
 ## License
 
 MIT License - See LICENSE file for details
-
-## Acknowledgments
-
-- Developed as a research tool for systematic literature reviews
-- Thanks to the open-source community for the excellent libraries used
-- Special thanks to OpenAI for providing powerful language models for research
-
----
-
-*This project demonstrates capabilities in Python programming, API integration, database management, and research automation.*

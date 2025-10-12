@@ -174,12 +174,6 @@ def _initialize_questions(self):
 - **PyPDF2**: Fast basic extraction
 - **PyMuPDF (fitz)**: Balanced speed and accuracy
 
-### API Rate Limiting
-The system includes built-in delays to respect OpenAI API rate limits. Adjust in `paper_analyzer.py`:
-```python
-time.sleep(1)  # Modify delay between API calls
-```
-
 ### Database Schema
 Expected database table structure:
 ```sql

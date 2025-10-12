@@ -1,0 +1,27 @@
+# Example configuration file for Research Paper Meta-Analysis Tool
+# Copy this file to config.ini and fill in your actual credentials
+
+[openai]
+# Your OpenAI API key
+# Get one at: https://platform.openai.com/api-keys
+key = your_openai_api_key_here
+
+[zotero]
+# Zotero API credentials
+# Get API key at: https://www.zotero.org/settings/keys
+api_key = your_zotero_api_key_here
+
+# Your Zotero group ID (found in group URL)
+group_id = your_group_id_here
+
+# Optional: specific collection ID within the group
+collection_id = your_collection_id_here
+
+[database]
+# Optional: MySQL database configuration
+# Can also be set in ~/.my.cnf
+host = localhost
+port = 3306
+user = your_username
+password = your_password
+database = research_papers

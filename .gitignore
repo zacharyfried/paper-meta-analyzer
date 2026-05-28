@@ -40,6 +40,7 @@ config.ini
 
 # Data files
 *.csv
+!examples/*.csv
 *.json
 *.xlsx
 *.xls

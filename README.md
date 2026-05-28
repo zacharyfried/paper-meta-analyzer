@@ -1,74 +1,85 @@
-# Research Paper Meta-Analysis Tool
+# Paper Meta-Analyzer
 
-A Python-based automated system for conducting meta-analyses of academic research papers, specifically designed to analyze relationships between variables in empirical studies.
+Python tooling for screening academic papers for systematic reviews and meta-analysis workflows.
 
-## Author
-**Zachary Fried**
+## Overview
 
-## Project Overview
+Paper Meta-Analyzer helps automate the first-pass review of academic papers by combining Zotero metadata retrieval, PDF text extraction, structured GPT-based evaluation, and CSV export for downstream review.
 
-This project automates the systematic review process for academic research papers by:
-- Retrieving papers from reference management systems (Zotero)
-- Extracting text content from PDF files
-- Using OpenAI's GPT models to analyze papers against specific research criteria
-- Storing and exporting results for meta-analysis
+The project was originally developed for a research workflow that screened papers for study population, methodology, relevant variables, and whether specific variable relationships were examined. The criteria in the repository are written for a loneliness/alcohol-use review, but the pipeline can be adapted to other systematic-review questions by changing the evaluation prompts and output columns.
 
-### Background
+## What I Built
 
-This tool was developed as a research component to streamline the systematic review process for meta-analyses. It addresses the time-intensive nature of manually reviewing large numbers of academic papers by automating the initial screening and data extraction phases.
+- A Zotero connector for retrieving paper metadata and optional PDF attachments from a group library.
+- A PDF processing utility with multiple extraction backends and readability checks.
+- A GPT-assisted screening engine that evaluates papers against structured inclusion criteria.
+- CSV export paths for metadata and evaluated paper decisions.
+- Configuration support through `config.ini`, environment variables, and MySQL client settings.
 
-### Key Features
-- **Automated Paper Retrieval**: Integration with Zotero reference management system
-- **Multi-Method PDF Processing**: Robust text extraction using multiple libraries
-- **AI-Powered Analysis**: Leverages GPT-4 for intelligent paper evaluation
-- **Systematic Evaluation**: Structured assessment against predefined research criteria
-- **Database Integration**: MySQL support for large-scale data management
-- **Batch Processing**: Efficient handling of large paper collections
+## Workflow
 
-## Use Case Example
+```text
+Zotero library
+    |
+    v
+zotero_integration.py
+    |
+    v
+paper metadata + optional PDFs
+    |
+    v
+pdf_processor.py
+    |
+    v
+extracted paper text
+    |
+    v
+paper_analyzer.py
+    |
+    v
+screening decisions + notes CSV
+```
 
-This system was originally developed to analyze the relationship between loneliness and alcohol use in adults, evaluating papers based on:
-- Subject demographics (human adults 18+)
-- Study methodology (empirical, quantitative/mixed methods)
-- Presence of relevant variables (loneliness measures, alcohol use measures)
-- Examination of variable relationships
+## Repository Contents
 
-The framework can be adapted for any systematic review requiring consistent evaluation criteria.
+```text
+.
+|-- paper_analyzer.py            # GPT-assisted paper screening
+|-- zotero_integration.py        # Zotero metadata/PDF retrieval
+|-- pdf_processor.py             # PDF text extraction utilities
+|-- config.ini.example           # Example credentials/config file
+|-- examples/
+|   `-- sample_evaluated_papers.csv
+|-- docs/
+|   `-- architecture.md
+|-- requirements.txt
+|-- LICENSE
+`-- README.md
+```
 
 ## Installation
 
-### Prerequisites
-- Python 3.8 or higher
-- MySQL (optional, for database storage)
+Requirements:
+
+- Python 3.8+
 - OpenAI API key
+- Zotero API key for Zotero retrieval
+- MySQL database for `paper_analyzer.py`
 
-### Setup
+Install dependencies:
 
-1. Clone the repository:
 ```bash
-git clone https://github.com/zacharyfried/paper-meta-analyzer.git
-cd paper-meta-analyzer
+python -m pip install -r requirements.txt
 ```
 
-2. Install required packages:
+Copy the example config and fill in local credentials:
+
 ```bash
-pip install -r requirements.txt
+cp config.ini.example config.ini
 ```
 
-3. Configure credentials:
+The OpenAI and Zotero keys can also be set with environment variables:
 
-Create a `config.ini` file:
-```ini
-[openai]
-key = your_openai_api_key_here
-
-[zotero]
-api_key = your_zotero_api_key_here
-group_id = your_group_id
-collection_id = your_collection_id
-```
-
-Alternatively, set environment variables:
 ```bash
 export OPENAI_API_KEY="your_key_here"
 export ZOTERO_API_KEY="your_key_here"
@@ -76,9 +87,8 @@ export ZOTERO_GROUP_ID="your_group_id"
 export ZOTERO_COLLECTION_ID="your_collection_id"
 ```
 
-4. (Optional) Configure MySQL:
+MySQL credentials are read from `~/.my.cnf` by default:
 
-Create `~/.my.cnf`:
 ```ini
 [client]
 user = your_mysql_user
@@ -88,120 +98,76 @@ host = localhost
 
 ## Usage
 
-### 1. Paper Analysis (Main Script)
+Retrieve metadata from Zotero:
 
-Analyze papers from a database:
 ```bash
-python paper_analyzer.py --database mydb --output results.csv
+python zotero_integration.py --limit 50 --output papers_metadata.csv
 ```
 
-Options:
-- `--database`: MySQL database name (required)
-- `--port`: MySQL port (default: 3306)
-- `--output`: Output CSV file (default: evaluated_papers.csv)
-- `--table`: Database table name (default: papers)
+Retrieve metadata and download PDF attachments:
 
-### 2. Zotero Integration
-
-Retrieve papers from Zotero:
 ```bash
-python zotero_integration.py --limit 50 --download-pdfs
+python zotero_integration.py --limit 50 --download-pdfs --output papers_metadata.csv
 ```
 
-Options:
-- `--collection`: Specific collection ID
-- `--limit`: Maximum papers to retrieve
-- `--download-pdfs`: Download PDF attachments
-- `--output`: Output CSV file
+Extract text from a single PDF:
 
-### 3. PDF Processing
-
-Extract text from PDFs:
 ```bash
 python pdf_processor.py /path/to/paper.pdf --output extracted.txt
 ```
 
-Check PDF readability:
+Check whether PDFs have extractable text:
+
 ```bash
-python pdf_processor.py /path/to/pdfs/ --check
+python pdf_processor.py /path/to/pdfs --check
 ```
 
-Options:
-- `--method`: Extraction method (auto/pdfplumber/pypdf2/pymupdf)
-- `--check`: Check readability without full extraction
-- `--output`: Save extracted text to file
+Run GPT-assisted screening against a MySQL table:
 
-## Project Structure
-
-```
-research-paper-meta-analysis/
-│
-├── paper_analyzer.py        # Main analysis engine
-├── zotero_integration.py    # Zotero library connector
-├── pdf_processor.py         # PDF text extraction utilities
-├── requirements.txt         # Python dependencies
-├── config.ini.example       # Example configuration file
-└── README.md               # Documentation
+```bash
+python paper_analyzer.py --database research_papers --table papers --output evaluated_papers.csv
 ```
 
-## Customization
+See [examples/sample_evaluated_papers.csv](examples/sample_evaluated_papers.csv) for the expected output shape.
 
-### Modifying Evaluation Criteria
+## Expected Database Shape
 
-Edit the questions in `paper_analyzer.py`:
+`paper_analyzer.py` expects a MySQL table with paper metadata and extracted text. At minimum, the table should provide a content field:
 
-```python
-def _initialize_questions(self):
-    return [
-        {
-            "main": "Your primary question here",
-            "follow_up": "Optional follow-up for details"
-        },
-        # Add more questions...
-    ]
-```
-
-### Adapting for Different Research Topics
-
-1. Modify the evaluation questions to match your research criteria
-2. Update the `evaluate_paper()` method logic
-3. Adjust output columns in the results dataframe
-
-## Technical Details
-
-### PDF Processing Methods
-- **pdfplumber**: Best for complex layouts and tables
-- **PyPDF2**: Fast basic extraction
-- **PyMuPDF (fitz)**: Balanced speed and accuracy
-
-### Database Schema
-Expected database table structure:
 ```sql
 CREATE TABLE papers (
     id INT PRIMARY KEY,
     title VARCHAR(500),
     authors TEXT,
     year INT,
-    content TEXT,  -- or pdf_content
-    -- additional metadata fields
+    content TEXT
 );
 ```
 
-## Troubleshooting
+The analyzer also accepts `pdf_content` as a fallback text column if `content` is missing.
 
-### Common Issues
+## Customization
 
-1. **PDF extraction fails**: Try different extraction methods or check if PDF is image-based
-2. **API rate limits**: Increase delays between API calls
-3. **Memory issues with large PDFs**: Process in smaller batches
-4. **Database connection errors**: Verify MySQL credentials and permissions
+The screening criteria live in `ResearchPaperAnalyzer._initialize_questions()` inside `paper_analyzer.py`.
 
-### Logging
-All components generate detailed logs:
-- `zotero_retrieval.log`: Paper retrieval process
-- `pdf_processing.log`: PDF extraction details
-- Console output for real-time monitoring
+To adapt the project for another systematic review:
+
+1. Replace the question prompts with the target inclusion/exclusion criteria.
+2. Update the result column names in `evaluate_paper()`.
+3. Adjust the final inclusion logic to match the review protocol.
+4. Update the CSV output documentation so reviewers understand each column.
+
+## Limitations
+
+- The current scripts are research workflow tools, not a packaged Python library.
+- GPT responses should be treated as screening support, not final scientific judgment.
+- PDF extraction quality depends on the source PDF; scanned/image-only PDFs may require OCR outside this repo.
+- The analyzer currently uses a fixed prompt set and assumes a MySQL-backed paper table.
+
+## More Detail
+
+See [docs/architecture.md](docs/architecture.md) for component responsibilities, data flow, and extension points.
 
 ## License
 
-MIT License - See LICENSE file for details
+MIT License. See [LICENSE](LICENSE).

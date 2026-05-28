@@ -1,3 +1,3 @@
 id,title,authors,year,included_in_final_decision,reason_excluded,q1_human_subjects,q1_notes,q2_empirical_study,q3_qualitative,q4_loneliness_variables,q4_notes,q5_alcohol_variables,q5_notes,q6_loneliness_alcohol_relationship,q6_notes
 1,Example Eligible Study,"Example Author; Second Author",2023,Yes,,Yes,"Adult participants recruited from a community sample.",Yes,Quantitative,Yes,"UCLA Loneliness Scale",Yes,"AUDIT alcohol-use measure",Yes,"Regression model examined association between loneliness and alcohol use."
-2,Example Excluded Study,Example Author,2021,No,No alcohol variables,Yes,"Adult participants.",Yes,Quantitative,Yes,"Single-item loneliness measure",No,,,,
+2,Example Excluded Study,Example Author,2021,No,No alcohol variables,Yes,"Adult participants.",Yes,Quantitative,Yes,"Single-item loneliness measure",No,,,

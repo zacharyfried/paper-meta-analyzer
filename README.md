@@ -6,7 +6,7 @@ Python tooling for screening academic papers for systematic reviews and meta-ana
 
 Paper Meta-Analyzer helps automate the first-pass review of academic papers by combining Zotero metadata retrieval, PDF text extraction, structured GPT-based evaluation, and CSV export for downstream review.
 
-The project was originally developed for a research workflow that screened papers for study population, methodology, relevant variables, and whether specific variable relationships were examined. The criteria in the repository are written for a loneliness/alcohol-use review, but the pipeline can be adapted to other systematic-review questions by changing the evaluation prompts and output columns.
+The project was originally developed for a research workflow that screened papers for study population, methodology, relevant variables, and whether specific variable relationships were examined. The public version uses generic example criteria so the repository demonstrates the workflow without exposing a private review protocol.
 
 ## What I Built
 

@@ -51,16 +51,16 @@ class ResearchPaperAnalyzer:
                 "follow_up": None
             },
             {
-                "main": "Considering measures such as the UCLA Loneliness Scale, De-Jong Giervald Scale, single questions about loneliness, and perceptions of social isolation, does this paper specifically focus on variables directly related to loneliness? Respond with '1' for yes and '0' for no.",
-                "follow_up": "List the specific loneliness-related variables or measures mentioned in the paper, such as the UCLA Loneliness Scale, De-Jong Giervald Scale, or others. Use bullet points for each item."
+                "main": "Does this paper include variables or measures related to the review's primary exposure or concept of interest? Respond with '1' for yes and '0' for no.",
+                "follow_up": "List the specific exposure-related variables or measures mentioned in the paper. Use bullet points for each item."
             },
             {
-                "main": "Does this paper include any variables or measures related to alcohol use? Respond with '1' for yes and '0' for no.",
-                "follow_up": "List the specific alcohol use-related variables or measures mentioned in the paper, such as AUDIT, RAPI, TLFB, biological tests, or other variables/measures of alcohol use. Use bullet points for each item."
+                "main": "Does this paper include variables or measures related to the review's primary outcome of interest? Respond with '1' for yes and '0' for no.",
+                "follow_up": "List the specific outcome-related variables or measures mentioned in the paper. Use bullet points for each item."
             },
             {
-                "main": "Does the paper specifically examine the relationship between loneliness and alcohol use? Respond with '1' for yes and '0' for no.",
-                "follow_up": "Briefly describe the nature of the relationship(s) between loneliness and alcohol use as examined in the paper."
+                "main": "Does the paper specifically examine the relationship between the primary exposure and primary outcome? Respond with '1' for yes and '0' for no.",
+                "follow_up": "Briefly describe the nature of the relationship between the exposure and outcome as examined in the paper."
             }
         ]
 
@@ -154,11 +154,11 @@ class ResearchPaperAnalyzer:
             'q1_notes': '',
             'q2_empirical_study': '',
             'q3_qualitative': '',
-            'q4_loneliness_variables': '',
+            'q4_exposure_variables': '',
             'q4_notes': '',
-            'q5_alcohol_variables': '',
+            'q5_outcome_variables': '',
             'q5_notes': '',
-            'q6_loneliness_alcohol_relationship': '',
+            'q6_exposure_outcome_relationship': '',
             'q6_notes': ''
         }
 
@@ -193,39 +193,39 @@ class ResearchPaperAnalyzer:
             results['reason_excluded'] = 'Study is purely qualitative'
             return results
 
-        # Q4: Loneliness variables
+        # Q4: Exposure variables
         response = self.ask_gpt(client, self.questions[4]["main"], paper_content, max_tokens=20)
         if '1' in response:
-            results['q4_loneliness_variables'] = 'Yes'
+            results['q4_exposure_variables'] = 'Yes'
             follow_up = self.ask_gpt(client, self.questions[4]["follow_up"], paper_content)
             results['q4_notes'] = follow_up
         elif '0' in response:
-            results['q4_loneliness_variables'] = 'No'
-            results['reason_excluded'] = 'No loneliness variables'
+            results['q4_exposure_variables'] = 'No'
+            results['reason_excluded'] = 'No exposure variables'
             return results
 
-        # Q5: Alcohol variables
+        # Q5: Outcome variables
         response = self.ask_gpt(client, self.questions[5]["main"], paper_content, max_tokens=20)
         if '1' in response:
-            results['q5_alcohol_variables'] = 'Yes'
+            results['q5_outcome_variables'] = 'Yes'
             follow_up = self.ask_gpt(client, self.questions[5]["follow_up"], paper_content)
             results['q5_notes'] = follow_up
         elif '0' in response:
-            results['q5_alcohol_variables'] = 'No'
-            results['reason_excluded'] = 'No alcohol variables'
+            results['q5_outcome_variables'] = 'No'
+            results['reason_excluded'] = 'No outcome variables'
             return results
 
-        # Q6: Loneliness-alcohol relationship
+        # Q6: Exposure-outcome relationship
         response = self.ask_gpt(client, self.questions[6]["main"], paper_content, max_tokens=20)
         if '1' in response:
-            results['q6_loneliness_alcohol_relationship'] = 'Yes'
+            results['q6_exposure_outcome_relationship'] = 'Yes'
             follow_up = self.ask_gpt(client, self.questions[6]["follow_up"], paper_content)
             results['q6_notes'] = follow_up
             results['included_in_final_decision'] = 'Yes'
             results['reason_excluded'] = ''
         elif '0' in response:
-            results['q6_loneliness_alcohol_relationship'] = 'No'
-            results['reason_excluded'] = 'No loneliness-alcohol relationship examined'
+            results['q6_exposure_outcome_relationship'] = 'No'
+            results['reason_excluded'] = 'No exposure-outcome relationship examined'
 
         return results
 
@@ -248,9 +248,9 @@ class ResearchPaperAnalyzer:
         question_columns = [
             'included_in_final_decision', 'reason_excluded',
             'q1_human_subjects', 'q1_notes', 'q2_empirical_study',
-            'q3_qualitative', 'q4_loneliness_variables', 'q4_notes',
-            'q5_alcohol_variables', 'q5_notes',
-            'q6_loneliness_alcohol_relationship', 'q6_notes'
+            'q3_qualitative', 'q4_exposure_variables', 'q4_notes',
+            'q5_outcome_variables', 'q5_notes',
+            'q6_exposure_outcome_relationship', 'q6_notes'
         ]
 
         for column in question_columns:
